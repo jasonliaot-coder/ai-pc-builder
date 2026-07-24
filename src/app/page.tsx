@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useAuth } from '@/contexts/AuthContext'
 
 const AI_API_KEY = process.env.NEXT_PUBLIC_AI_API_KEY || ''
 const AI_API_ENDPOINT = 'https://api.openai.com/v1/chat/completions'
@@ -65,6 +66,7 @@ async function fetchSinglePrice(component: BuildComponent, index: number): Promi
 }
 
 export default function Home() {
+  const { user, signOut } = useAuth()
   const [budget, setBudget] = useState(1000)
   const [purpose, setPurpose] = useState('gaming')
   const [notes, setNotes] = useState('')
@@ -240,6 +242,14 @@ export default function Home() {
   return (
     <div className="build-container">
       <div className="build-header">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: user ? '16px' : '0' }}>
+          {user && (
+            <div className="user-menu">
+              <span className="user-email">{user.email}</span>
+              <button className="btn-signout" onClick={signOut}>Sign Out</button>
+            </div>
+          )}
+        </div>
         <h1 className="build-title">AI PC Build Generator</h1>
         <p className="build-subtitle">Let our AI create the perfect build for your budget and needs.</p>
       </div>
